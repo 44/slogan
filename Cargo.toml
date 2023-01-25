@@ -1,0 +1,9 @@
+[package]
+name = "slogan"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+stderrlog = { version = "0.5" }
+log = { version = "0.4" }
