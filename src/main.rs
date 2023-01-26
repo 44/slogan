@@ -1,8 +1,11 @@
 #![allow(unused)]
 
 use clap::Parser;
-
 use log::*;
+use std::fs;
+
+extern crate ini;
+use ini::Ini;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -50,6 +53,20 @@ pub fn main() {
         .init()
         .unwrap();
     info!("Parsing: {:?}", args.logsources);
-    debug!("Config: {:?}", args)
+    debug!("Config: {:?}", args);
+
+    match args.config {
+        Some(cfg_file) => {
+            let from_file = Ini::load_from_file(cfg_file).unwrap();
+            for (sec, prop) in &from_file {
+                debug!("Config file section: {:?}", sec);
+                for (k, v) in prop.iter() {
+                    debug!("  {:?} : {:?}", k, v);
+                }
+            }
+        },
+        None => {}
+    }
+
 
 }
