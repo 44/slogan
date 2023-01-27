@@ -55,18 +55,48 @@ pub fn main() {
     info!("Parsing: {:?}", args.logsources);
     debug!("Config: {:?}", args);
 
-    match args.config {
-        Some(cfg_file) => {
+    if let Some(cfg_file) = args.config {
             let from_file = Ini::load_from_file(cfg_file).unwrap();
             for (sec, prop) in &from_file {
-                debug!("Config file section: {:?}", sec);
+                debug!("Config file section: {sec:?}");
                 for (k, v) in prop.iter() {
-                    debug!("  {:?} : {:?}", k, v);
+                    debug!("  {k:?} : {v:?}");
                 }
             }
-        },
-        None => {}
     }
+
+    fn is_odl_file(e: &walkdir::DirEntry) -> bool {
+        if e.file_type().is_dir() {
+            return false;
+        }
+        if let Some(fname) = e.file_name().to_str() {
+            return fname.ends_with(".odlgz") || fname.ends_with(".odl") || fname.ends_with(".aodl") || fname.ends_with(".odlsent");
+        }
+        return false;
+    }
+    for d in args.logsources.iter() {
+        for entry in walkdir::WalkDir::new(d)
+            .follow_links(true)
+            .contents_first(true)
+            .into_iter()
+            .filter_entry(is_odl_file)
+            .filter_map(|e| e.ok()) {
+            debug!("Found file: {}", entry.path().display());
+        }
+    }
+
+    // match args.config {
+    //     Some(cfg_file) => {
+    //         let from_file = Ini::load_from_file(cfg_file).unwrap();
+    //         for (sec, prop) in &from_file {
+    //             debug!("Config file section: {:?}", sec);
+    //             for (k, v) in prop.iter() {
+    //                 debug!("  {:?} : {:?}", k, v);
+    //             }
+    //         }
+    //     },
+    //     None => {}
+    // }
 
 
 }
