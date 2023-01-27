@@ -9,3 +9,5 @@ stderrlog = { version = "0.5" }
 log = { version = "0.4" }
 rust-ini = { version = "0.18" }
 walkdir = "2"
+serde = { version = "1.0", features = ["derive"] }
+quick-xml = { version = "0.27", features = ["serialize"]}

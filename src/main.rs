@@ -1,4 +1,5 @@
 #![allow(unused)]
+mod manifest;
 
 use clap::Parser;
 use log::*;
@@ -84,6 +85,8 @@ pub fn main() {
             debug!("Found file: {}", entry.path().display());
         }
     }
+    let man = manifest::parse_manifest(args.manifest.unwrap());
+    debug!("Manifest: {:?}", man);
 
     // match args.config {
     //     Some(cfg_file) => {
