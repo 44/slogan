@@ -1,5 +1,6 @@
 #![allow(unused)]
 mod manifest;
+mod odl;
 
 use clap::Parser;
 use log::*;
@@ -83,6 +84,7 @@ pub fn main() {
             .filter_entry(is_odl_file)
             .filter_map(|e| e.ok()) {
             debug!("Found file: {}", entry.path().display());
+            odl::inspect_log_file(entry.path());
         }
     }
     let man = manifest::parse_manifest(args.manifest.unwrap());
